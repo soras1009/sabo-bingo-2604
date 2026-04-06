@@ -605,6 +605,8 @@ function checkBingo() {
 // ── 빙고 모달 ──
 function closeBingo() {
   document.getElementById('bingo-overlay').classList.remove('show');
+  document.getElementById('bingo-form').style.display = 'block';
+  document.getElementById('done-msg').style.display = 'none';
 }
 
 function submitEntry() {
