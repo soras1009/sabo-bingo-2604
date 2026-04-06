@@ -378,7 +378,7 @@ const CARDS = [
   {
     icon: '🎁',
     tag: 'People Story',
-    title: '가족은 나의 힘 · 취미박스 챌린지',
+    title: '가족은 나의 힘',
     hint: '취미박스 챌린지에서 "여전히 찾게 된다"고 한 아이템. (3자)',
     answer: '두쫀쿠',
     len: 3,
@@ -388,7 +388,7 @@ const CARDS = [
   {
     icon: '⛳',
     tag: 'Special Story',
-    title: '스포츠단 포커스 · 2026 KLPGA',
+    title: '스포츠단 포커스',
     hint: '지난해 제주도에서 2승을 차지하고, 올해 KLPGA 국내 첫 대회인 더시에나 오픈에서 우승하며 통산 3승을 올린 삼천리 스포츠단 선수는? (3자)',
     answer: '고지원',
     len: 3,
@@ -398,7 +398,7 @@ const CARDS = [
   {
     icon: '🌡️',
     tag: 'Special Story',
-    title: '생활안전 · 일상 속 에너지 절약법',
+    title: '생활안전 이야기',
     hint: '삼천리가 알려주는 일상 속 에너지 절약법! 실내 ○○○○ 유지, 난방은 몇 도 냉방은 몇 도가 적당할까요? 칼럼을 읽고 맞혀보세요. (4자)',
     answer: '적정온도',
     len: 4,
@@ -408,7 +408,7 @@ const CARDS = [
   {
     icon: '🔧',
     tag: 'People Story',
-    title: '우리는 드림팀! · HUCES 네트워크팀',
+    title: '우리는 드림팀!',
     hint: 'HUCES 네트워크팀이 365일 24시간 관리하는 지역난방 ○○○관. (3자)',
     answer: '열수송',
     len: 3,
@@ -418,7 +418,7 @@ const CARDS = [
   {
     icon: '🎵',
     tag: 'People Story',
-    title: '삼천리人side 1 · 뮤직 플레이리스트',
+    title: '삼천리人side 1',
     hint: '삼천리그룹 임직원들이 참여한 뮤직 플레이리스트 이벤트에서 가장 많은 추천을 받은 곡 \'입춘\'의 가수 이름은? (3자)',
     answer: '한로로',
     len: 3,
@@ -428,7 +428,7 @@ const CARDS = [
   {
     icon: '🏃',
     tag: 'People Story',
-    title: '삼천리人side 2 · 삼천리 모터스 동호회',
+    title: '삼천리人side 2',
     hint: '삼천리 군포서비스센터 러닝 동호회 \'SCL ○○○○\'. 지난해 6월 결성돼 마라톤대회 완주까지 함께한 이들의 모임. (4자)',
     answer: '런런클럽',
     len: 4,
@@ -438,7 +438,7 @@ const CARDS = [
   {
     icon: '👷',
     tag: 'Special Story',
-    title: '포커스 · 신입사원의 24시간',
+    title: '포커스',
     hint: '삼천리 서남안전관리팀 황동윤 사원이 현장에서 점검한 밸브의 종류는? (3자)',
     answer: '매몰형',
     len: 3,
@@ -448,7 +448,7 @@ const CARDS = [
   {
     icon: '🍗',
     tag: 'Life Story',
-    title: 'Special Food · 호우섬 신메뉴',
+    title: 'Special Food',
     hint: '호우섬 신메뉴! 바삭한 치킨 위에 채 썬 고구마 라페를 올리고 칠리소스와 함께 먹는 메뉴 이름은? (7자)',
     answer: '크리스피라페치킨',
     len: 7,
@@ -456,13 +456,13 @@ const CARDS = [
   },
   // [8] 하단우
   {
-    icon: '📋',
+    icon: '🚗',
     tag: 'Life Story',
-    title: '삼천리그룹 소식 · 에너지 절감 실천',
-    hint: '삼천리그룹 에너지 절감 7대 실천사항 중 하나로 서면 대신 전자결재로 전환하고 필요시에는 1페이지로 보고하는 ○○○○○. (5자)',
-    answer: '페이퍼리스',
-    len: 5,
-    url: 'http://sabo.samchully.co.kr/202604/life05.php'
+    title: '삼천리 방방곡곡',
+    hint: '방방곡곡 칼럼에 등장한 자동차 모델은? BMW X5 ○○○○ (4자, 대소문자 무관)',
+    answer: 'M60i',
+    len: 4,
+    url: 'http://sabo.samchully.co.kr/202604/life01.php'
   },
 ];
 
@@ -549,7 +549,7 @@ function checkAnswer() {
   const val = inp.value.trim();
   const correct = CARDS[activeCard].answer;
 
-  if (val === correct) {
+  if (val.toLowerCase() === correct.toLowerCase()) {
     inp.className = 'answer-input correct-flash';
     solved.add(activeCard);
     updateStatus();
