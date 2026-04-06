@@ -609,8 +609,19 @@ function submitEntry() {
   const company = document.getElementById('b-company').value.trim();
   const dept = document.getElementById('b-dept').value.trim();
   if (!name || !company || !dept) { alert('이름, 소속회사, 팀을 모두 입력해주세요.'); return; }
-  // TODO: Apps Script 웹앱 URL 연결
-  console.log('빙고 응모:', { name, company, dept, solved: [...solved], bingos: bingoLines.size });
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyDgI-sgrwRh7g_f1qHNwFmzUlSUIhgYWXJ5vYHdyBL1W3oeGFWEtJz8QqjVqUSu-m7VA/exec';
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name,
+      company,
+      dept,
+      solved: solved.size,
+      bingos: bingoLines.size
+    })
+  });
   entryDone = true;
   document.getElementById('bingo-form').style.display = 'none';
   document.getElementById('done-msg').style.display = 'block';
