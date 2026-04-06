@@ -363,7 +363,7 @@ body::before{
       <div class="dck">🎊</div>
       <h3>응모 완료!</h3>
       <p>참여해주셔서 감사해요.<br>추첨 결과는 개별 안내드릴게요 💌<br><br>나머지 칸도 도전해보세요!</p>
-      <button class="keep-btn" style="margin-top:16px" onclick="closeBingo()">계속 풀기</button>
+      <button class="keep-btn" style="margin-top:16px" onclick="closeBingo()">계속 풀어볼게요 (당첨 기회 UP! 🍀)</button>
     </div>
   </div>
 </div>
@@ -591,8 +591,11 @@ function checkBingo() {
     }
   });
   updateStatus();
-  if (newBingo && !entryDone) {
+  if (newBingo) {
     setTimeout(() => {
+      // 응모 폼 초기화
+      document.getElementById('bingo-form').style.display = 'block';
+      document.getElementById('done-msg').style.display = 'none';
       spawnConfetti();
       document.getElementById('bingo-overlay').classList.add('show');
     }, 600);
