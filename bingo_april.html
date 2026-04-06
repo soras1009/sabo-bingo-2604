@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>삼천리 Together Vol.169 · 4월호 빙고 이벤트</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --peach:#FFB085; --rose:#FF7C6E; --coral:#E05A50;
+  --cream:#FFF9F5; --sage:#7DBD7D; --mid:#6B5B45;
+  --light:#B8A890; --border:#E8C9A0; --text:#2D2416;
+  --butter:#FFF6E0; --lav:#C9B8E8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse at 5% 10%,rgba(255,176,133,.22) 0%,transparent 45%),
+    radial-gradient(ellipse at 95% 5%,rgba(201,184,232,.18) 0%,transparent 42%),
+    radial-gradient(ellipse at 88% 95%,rgba(125,189,125,.12) 0%,transparent 38%),
+    radial-gradient(ellipse at 12% 90%,rgba(255,124,110,.1) 0%,transparent 38%);
+}
+
+/* 꽃잎 */
+.petal{position:fixed;pointer-events:none;z-index:0;opacity:0;animation:petalFall linear infinite;}
+@keyframes petalFall{
+  0%{opacity:0;transform:translateY(-20px) rotate(0deg) scale(1)}
+  10%{opacity:.6}
+  90%{opacity:.3}
+  100%{opacity:0;transform:translateY(110vh) rotate(360deg) scale(.6)}
+}
+
+.wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:40px 20px 80px;}
+
+/* ── 헤더 ── */
+.hdr{text-align:center;margin-bottom:40px;animation:fadeUp .8s ease both;}
+.vol{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--peach),var(--rose));
+  color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;
+  padding:5px 16px;border-radius:20px;margin-bottom:16px;
+}
+.hdr h1{
+  font-family:'Nanum Myeongjo',serif;
+  font-size:clamp(28px,6vw,44px);font-weight:800;line-height:1.25;margin-bottom:12px;
+}
+.hdr h1 em{color:var(--coral);font-style:normal;}
+.hdr p{font-size:13.5px;color:var(--mid);line-height:1.85;margin-bottom:20px;}
+
+.rule-box{
+  display:inline-flex;flex-direction:column;gap:6px;
+  background:rgba(255,176,133,.12);border:1px solid rgba(255,176,133,.35);
+  border-radius:14px;padding:14px 20px;text-align:left;
+}
+.rule-box span{font-size:12.5px;color:var(--mid);display:flex;align-items:center;gap:6px;}
+
+/* ── 빙고 상태 ── */
+.status{
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  margin-bottom:28px;animation:fadeUp .8s .1s ease both;
+}
+.bingo-count{
+  background:#fff;border:1px solid var(--border);border-radius:14px;
+  padding:12px 22px;text-align:center;box-shadow:0 4px 16px rgba(139,90,60,.07);
+}
+.bingo-count .num{
+  font-family:'Nanum Myeongjo',serif;font-size:32px;font-weight:800;color:var(--coral);line-height:1;
+}
+.bingo-count .lbl{font-size:11px;color:var(--light);margin-top:3px;letter-spacing:.5px;}
+.solve-count{
+  background:#fff;border:1px solid var(--border);border-radius:14px;
+  padding:12px 22px;text-align:center;box-shadow:0 4px 16px rgba(139,90,60,.07);
+}
+.solve-count .num{
+  font-family:'Nanum Myeongjo',serif;font-size:32px;font-weight:800;color:var(--sage);line-height:1;
+}
+.solve-count .lbl{font-size:11px;color:var(--light);margin-top:3px;letter-spacing:.5px;}
+
+/* ── 빙고판 ── */
+.board-wrap{animation:fadeUp .8s .2s ease both;}
+.board{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+  max-width:600px;margin:0 auto 32px;
+}
+
+.bcard{
+  background:#fff;border:2px solid var(--border);border-radius:16px;
+  padding:20px 14px;text-align:center;cursor:pointer;
+  transition:all .2s;position:relative;overflow:hidden;
+  box-shadow:0 4px 16px rgba(139,90,60,.06);
+  min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;
+}
+.bcard::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,176,133,.08),rgba(255,124,110,.04));
+  opacity:0;transition:opacity .2s;
+}
+.bcard:hover{border-color:var(--peach);transform:translateY(-3px);box-shadow:0 8px 28px rgba(139,90,60,.12);}
+.bcard:hover::before{opacity:1;}
+.bcard:active{transform:translateY(-1px);}
+
+.bcard.solved{
+  background:linear-gradient(135deg,#FFF2EB,#FFE0D0);
+  border-color:var(--peach);
+}
+.bcard.solved .card-icon{filter:none;}
+.bcard.bingo-line{
+  background:linear-gradient(135deg,#FFF8E0,#FFE9A0);
+  border-color:#F0C040;
+  box-shadow:0 0 0 3px rgba(240,192,64,.25),0 8px 24px rgba(240,192,64,.2);
+}
+
+.card-icon{font-size:26px;line-height:1;transition:transform .2s;}
+.bcard:hover .card-icon{transform:scale(1.15);}
+.bcard.solved .card-icon{animation:iconPop .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes iconPop{0%{transform:scale(.5)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
+
+.card-tag{
+  font-size:10px;font-weight:700;letter-spacing:.8px;color:var(--light);
+  text-transform:uppercase;
+}
+.card-title{
+  font-family:'Nanum Myeongjo',serif;font-size:13.5px;font-weight:700;
+  color:var(--text);line-height:1.4;
+}
+.card-hint{font-size:11px;color:var(--light);line-height:1.4;margin-top:2px;}
+
+.solved-mark{
+  position:absolute;top:8px;right:10px;
+  font-size:16px;animation:fadeIn .3s ease;
+}
+
+/* ── 퀴즈 모달 ── */
+.overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(45,36,22,.5);backdrop-filter:blur(8px);
+  z-index:100;align-items:center;justify-content:center;padding:20px;
+}
+.overlay.show{display:flex;animation:fadeIn .25s ease;}
+
+.qmodal{
+  background:#fff;border-radius:24px;padding:36px 32px;
+  max-width:460px;width:100%;
+  box-shadow:0 24px 72px rgba(45,36,22,.18);
+  animation:slideUp .35s cubic-bezier(.34,1.56,.64,1) both;
+  position:relative;
+}
+.qmodal-close{
+  position:absolute;top:16px;right:18px;
+  background:none;border:none;font-size:20px;cursor:pointer;
+  color:var(--light);transition:color .15s;
+}
+.qmodal-close:hover{color:var(--text);}
+
+.qmodal-tag{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--peach),var(--rose));
+  color:#fff;font-size:10px;font-weight:700;letter-spacing:1.5px;
+  padding:4px 12px;border-radius:12px;margin-bottom:12px;
+}
+.qmodal h2{
+  font-family:'Nanum Myeongjo',serif;font-size:20px;font-weight:800;
+  margin-bottom:8px;line-height:1.4;
+}
+.qmodal-hint{
+  font-size:13px;color:var(--mid);line-height:1.7;
+  margin-bottom:6px;
+}
+.qmodal-link{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:12px;color:var(--coral);font-weight:600;
+  text-decoration:none;margin-bottom:22px;
+  transition:opacity .15s;
+}
+.qmodal-link:hover{opacity:.7;}
+
+.qmodal-len{
+  font-size:11.5px;color:var(--light);margin-bottom:10px;letter-spacing:.3px;
+}
+
+.answer-row{display:flex;gap:8px;margin-bottom:16px;}
+.answer-input{
+  flex:1;padding:13px 16px;
+  border:2px solid #E8D8C4;border-radius:12px;
+  font-family:'Nanum Myeongjo',serif;font-size:18px;font-weight:700;
+  color:var(--text);outline:none;text-align:center;letter-spacing:4px;
+  transition:border-color .2s,box-shadow .2s;
+  ime-mode:active;
+}
+.answer-input:focus{border-color:var(--coral);box-shadow:0 0 0 3px rgba(224,90,80,.12);}
+.answer-input.wrong{
+  border-color:#FF5A5A;background:#FFF5F5;
+  animation:shake .3s ease;
+}
+.answer-input.correct-flash{
+  border-color:var(--sage);background:#F0FFF0;
+}
+@keyframes shake{
+  0%{transform:translateX(0)}25%{transform:translateX(-6px)}
+  50%{transform:translateX(6px)}75%{transform:translateX(-4px)}100%{transform:translateX(0)}
+}
+
+.submit-btn{
+  padding:13px 20px;
+  background:linear-gradient(135deg,var(--peach),var(--coral));
+  color:#fff;border:none;border-radius:12px;
+  font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;transition:transform .15s,box-shadow .15s;white-space:nowrap;
+}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(224,90,80,.3);}
+
+.wrong-msg{
+  font-size:12px;color:#E05A50;text-align:center;
+  min-height:18px;transition:opacity .2s;
+}
+
+.already-solved{
+  text-align:center;padding:12px;
+  background:linear-gradient(135deg,#F0FFF0,#E0FFE8);
+  border-radius:12px;border:1px solid rgba(125,189,125,.3);
+  font-size:13px;color:var(--sage);font-weight:600;
+}
+
+/* ── 빙고 달성 모달 ── */
+.bingo-modal{
+  background:#fff;border-radius:24px;padding:40px 36px;
+  max-width:420px;width:100%;text-align:center;
+  box-shadow:0 24px 72px rgba(45,36,22,.18);
+  animation:slideUp .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+.bingo-emoji{font-size:56px;margin-bottom:14px;animation:bounce .6s .1s ease both;}
+@keyframes bounce{0%{transform:scale(0)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+.bingo-modal h2{
+  font-family:'Nanum Myeongjo',serif;font-size:26px;font-weight:800;margin-bottom:10px;
+}
+.bingo-modal>p{font-size:13.5px;color:var(--mid);line-height:1.75;margin-bottom:26px;}
+
+.fg{margin-bottom:12px;text-align:left;}
+.fl{font-size:11.5px;font-weight:700;color:var(--mid);display:block;margin-bottom:5px;}
+.fi{
+  width:100%;padding:12px 14px;
+  border:1.5px solid #E8D8C4;border-radius:10px;
+  font-family:'Noto Sans KR',sans-serif;font-size:14px;
+  color:var(--text);outline:none;transition:border-color .2s;
+}
+.fi:focus{border-color:var(--coral);box-shadow:0 0 0 3px rgba(224,90,80,.1);}
+.entry-btn{
+  width:100%;padding:14px;margin-top:6px;
+  background:linear-gradient(135deg,var(--peach),var(--coral));
+  color:#fff;border:none;border-radius:12px;
+  font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:700;
+  cursor:pointer;transition:transform .15s,box-shadow .15s;
+}
+.entry-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(224,90,80,.3);}
+.keep-btn{
+  width:100%;padding:12px;margin-top:8px;
+  background:transparent;color:var(--mid);
+  border:1.5px solid var(--border);border-radius:12px;
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .15s;
+}
+.keep-btn:hover{border-color:var(--mid);color:var(--text);}
+
+.done-msg{display:none;padding:16px 0;}
+.done-msg .dck{font-size:46px;margin-bottom:12px;}
+.done-msg h3{font-family:'Nanum Myeongjo',serif;font-size:22px;margin-bottom:8px;}
+.done-msg p{font-size:13px;color:var(--mid);line-height:1.7;}
+
+/* ── 애니메이션 ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* confetti */
+.cpiece{position:fixed;pointer-events:none;z-index:200;animation:cfall 2.5s ease-in forwards;}
+@keyframes cfall{0%{opacity:1;transform:translateY(0) rotate(0deg)}100%{opacity:0;transform:translateY(85vh) rotate(720deg) scale(.4)}}
+
+/* 빙고 라인 펄스 */
+@keyframes bingoPulse{
+  0%{box-shadow:0 0 0 3px rgba(240,192,64,.25),0 8px 24px rgba(240,192,64,.2)}
+  50%{box-shadow:0 0 0 6px rgba(240,192,64,.35),0 12px 32px rgba(240,192,64,.3)}
+  100%{box-shadow:0 0 0 3px rgba(240,192,64,.25),0 8px 24px rgba(240,192,64,.2)}
+}
+.bcard.bingo-line{animation:bingoPulse 1.8s ease-in-out infinite;}
+</style>
+</head>
+<body>
+<div id="petals"></div>
+
+<div class="wrap">
+  <!-- 헤더 -->
+  <div class="hdr">
+    <div class="vol">🌸 TOGETHER VOL.169 · APRIL 2026</div>
+    <h1>4월호 사보<br><em>빙고</em> 이벤트!</h1>
+    <p>9개 칸 중 가로·세로·대각선 한 줄을 완성하면<br>이벤트 응모 완료! 칼럼을 읽고 정답을 맞혀보세요 🌷</p>
+    <div class="rule-box">
+      <span>📖 각 칸을 클릭하면 퀴즈가 열려요</span>
+      <span>✅ 정답을 맞히면 칸이 완성돼요</span>
+      <span>🎉 한 줄 완성(빙고) 시 응모 가능해요</span>
+    </div>
+  </div>
+
+  <!-- 상태 -->
+  <div class="status">
+    <div class="bingo-count">
+      <div class="num" id="bingo-num">0</div>
+      <div class="lbl">BINGO</div>
+    </div>
+    <div class="solve-count">
+      <div class="num" id="solve-num">0</div>
+      <div class="lbl">완성 / 9</div>
+    </div>
+  </div>
+
+  <!-- 빙고판 -->
+  <div class="board-wrap">
+    <div class="board" id="board"></div>
+  </div>
+</div>
+
+<!-- 퀴즈 모달 -->
+<div class="overlay" id="quiz-overlay">
+  <div class="qmodal" id="qmodal">
+    <button class="qmodal-close" onclick="closeQuiz()">✕</button>
+    <div class="qmodal-tag" id="q-tag"></div>
+    <h2 id="q-title"></h2>
+    <p class="qmodal-hint" id="q-hint"></p>
+    <a class="qmodal-link" id="q-link" target="_blank" rel="noopener noreferrer">
+      📖 칼럼 읽고 힌트 얻기 →
+    </a>
+    <div id="q-solved-view" class="already-solved" style="display:none;">
+      ✅ 이미 맞혔어요!
+    </div>
+    <div id="q-input-view">
+      <p class="qmodal-len" id="q-len"></p>
+      <div class="answer-row">
+        <input class="answer-input" id="ans-input" placeholder="정답 입력" autocomplete="off" spellcheck="false">
+        <button class="submit-btn" onclick="checkAnswer()">확인</button>
+      </div>
+      <p class="wrong-msg" id="wrong-msg"></p>
+    </div>
+  </div>
+</div>
+
+<!-- 빙고 달성 모달 -->
+<div class="overlay" id="bingo-overlay">
+  <div class="bingo-modal">
+    <div id="bingo-form">
+      <div class="bingo-emoji">🎉</div>
+      <h2>빙고!</h2>
+      <p>한 줄을 완성했어요! 🌸<br>이름과 소속을 입력하고 이벤트에 응모하세요.</p>
+      <div class="fg"><label class="fl">이름</label><input class="fi" id="b-name" placeholder="홍길동"></div>
+      <div class="fg"><label class="fl">소속회사</label><input class="fi" id="b-company" placeholder="예) 삼천리"></div>
+      <div class="fg"><label class="fl">팀</label><input class="fi" id="b-dept" placeholder="예) PR팀"></div>
+      <button class="entry-btn" onclick="submitEntry()">🌷 이벤트 응모하기</button>
+      <button class="keep-btn" onclick="closeBingo()">계속 풀어볼게요 (당첨 기회 UP! 🍀)</button>
+    </div>
+    <div class="done-msg" id="done-msg">
+      <div class="dck">🎊</div>
+      <h3>응모 완료!</h3>
+      <p>참여해주셔서 감사해요.<br>추첨 결과는 개별 안내드릴게요 💌<br><br>나머지 칸도 도전해보세요!</p>
+      <button class="keep-btn" style="margin-top:16px" onclick="closeBingo()">계속 풀기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =====================================================
+   빙고 데이터 (3×3 = 9칸)
+   각 칼럼에서 1문제씩, 읽어야만 알 수 있는 것
+===================================================== */
+const CARDS = [
+  // [0] 상단좌
+  {
+    icon: '🎁',
+    tag: 'People Story',
+    title: '가족은 나의 힘 · 취미박스 챌린지',
+    hint: '취미박스 챌린지에서 "여전히 찾게 된다"고 한 아이템. (3자)',
+    answer: '두쫀쿠',
+    len: 3,
+    url: 'http://sabo.samchully.co.kr/202604/people09.php'
+  },
+  // [1] 상단중
+  {
+    icon: '⛳',
+    tag: 'Special Story',
+    title: '스포츠단 포커스 · 2026 KLPGA',
+    hint: '지난해 제주도에서 2승을 차지하고, 올해 KLPGA 국내 첫 대회인 더시에나 오픈에서 우승하며 통산 3승을 올린 삼천리 스포츠단 선수는? (3자)',
+    answer: '고지원',
+    len: 3,
+    url: 'http://sabo.samchully.co.kr/202604/special07.php'
+  },
+  // [2] 상단우
+  {
+    icon: '🌡️',
+    tag: 'Special Story',
+    title: '생활안전 · 일상 속 에너지 절약법',
+    hint: '삼천리가 알려주는 일상 속 에너지 절약법! 실내 ○○○○ 유지, 난방은 몇 도 냉방은 몇 도가 적당할까요? 칼럼을 읽고 맞혀보세요. (4자)',
+    answer: '적정온도',
+    len: 4,
+    url: 'http://sabo.samchully.co.kr/202604/special01.php'
+  },
+  // [3] 중단좌
+  {
+    icon: '🔧',
+    tag: 'People Story',
+    title: '우리는 드림팀! · HUCES 네트워크팀',
+    hint: 'HUCES 네트워크팀이 365일 24시간 관리하는 지역난방 ○○○관. (3자)',
+    answer: '열수송',
+    len: 3,
+    url: 'http://sabo.samchully.co.kr/202604/people01.php'
+  },
+  // [4] 중단중
+  {
+    icon: '🎵',
+    tag: 'People Story',
+    title: '삼천리人side 1 · 뮤직 플레이리스트',
+    hint: '삼천리그룹 임직원들이 참여한 뮤직 플레이리스트 이벤트에서 가장 많은 추천을 받은 곡 \'입춘\'의 가수 이름은? (3자)',
+    answer: '한로로',
+    len: 3,
+    url: 'http://sabo.samchully.co.kr/202604/people04.php'
+  },
+  // [5] 중단우
+  {
+    icon: '🏃',
+    tag: 'People Story',
+    title: '삼천리人side 2 · 삼천리 모터스 동호회',
+    hint: '삼천리 군포서비스센터 러닝 동호회 \'SCL ○○○○\'. 지난해 6월 결성돼 마라톤대회 완주까지 함께한 이들의 모임. (4자)',
+    answer: '런런클럽',
+    len: 4,
+    url: 'http://sabo.samchully.co.kr/202604/people05.php'
+  },
+  // [6] 하단좌
+  {
+    icon: '👷',
+    tag: 'Special Story',
+    title: '포커스 · 신입사원의 24시간',
+    hint: '삼천리 서남안전관리팀 황동윤 사원이 현장에서 점검한 밸브의 종류는? (3자)',
+    answer: '매몰형',
+    len: 3,
+    url: 'http://sabo.samchully.co.kr/202604/special03.php'
+  },
+  // [7] 하단중
+  {
+    icon: '🍗',
+    tag: 'Life Story',
+    title: 'Special Food · 호우섬 신메뉴',
+    hint: '호우섬 신메뉴! 바삭한 치킨 위에 채 썬 고구마 라페를 올리고 칠리소스와 함께 먹는 메뉴 이름은? (7자)',
+    answer: '크리스피라페치킨',
+    len: 7,
+    url: 'http://sabo.samchully.co.kr/202604/life02.php'
+  },
+  // [8] 하단우
+  {
+    icon: '📋',
+    tag: 'Life Story',
+    title: '삼천리그룹 소식 · 에너지 절감 실천',
+    hint: '삼천리그룹 에너지 절감 7대 실천사항 중 하나로 서면 대신 전자결재로 전환하고 필요시에는 1페이지로 보고하는 ○○○○○. (5자)',
+    answer: '페이퍼리스',
+    len: 5,
+    url: 'http://sabo.samchully.co.kr/202604/life05.php'
+  },
+];
+
+// 빙고 라인 체크 (행0,1,2 / 열0,1,2 / 대각선)
+const LINES = [
+  [0,1,2],[3,4,5],[6,7,8],   // 가로
+  [0,3,6],[1,4,7],[2,5,8],   // 세로
+  [0,4,8],[2,4,6]            // 대각선
+];
+
+let solved = new Set();
+let bingoLines = new Set();
+let entryDone = false;
+let activeCard = null;
+
+// ── 빙고판 렌더 ──
+function renderBoard() {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+  CARDS.forEach((card, i) => {
+    const el = document.createElement('div');
+    el.className = 'bcard' + (solved.has(i) ? ' solved' : '');
+    el.dataset.i = i;
+    el.innerHTML = `
+      <div class="card-icon">${card.icon}</div>
+      <div class="card-tag">${card.tag}</div>
+      <div class="card-title">${card.title}</div>
+      ${solved.has(i) ? '<div class="solved-mark">✅</div>' : ''}
+    `;
+    el.addEventListener('click', () => openQuiz(i));
+    board.appendChild(el);
+  });
+  highlightBingoLines();
+}
+
+// ── 빙고 라인 하이라이트 ──
+function highlightBingoLines() {
+  const cards = document.querySelectorAll('.bcard');
+  cards.forEach(c => c.classList.remove('bingo-line'));
+  bingoLines.forEach(lineIdx => {
+    LINES[lineIdx].forEach(ci => {
+      cards[ci]?.classList.add('bingo-line');
+    });
+  });
+}
+
+// ── 퀴즈 열기 ──
+function openQuiz(i) {
+  activeCard = i;
+  const card = CARDS[i];
+  document.getElementById('q-tag').textContent = card.tag;
+  document.getElementById('q-title').textContent = card.title;
+  document.getElementById('q-hint').textContent = card.hint;
+  const link = document.getElementById('q-link');
+  link.href = card.url;
+  link.textContent = `📖 ${card.title} 읽기 →`;
+
+  if (solved.has(i)) {
+    document.getElementById('q-solved-view').style.display = 'block';
+    document.getElementById('q-input-view').style.display = 'none';
+  } else {
+    document.getElementById('q-solved-view').style.display = 'none';
+    document.getElementById('q-input-view').style.display = 'block';
+    document.getElementById('q-len').textContent = `정답은 ${card.len}자예요`;
+    const inp = document.getElementById('ans-input');
+    inp.value = '';
+    inp.className = 'answer-input';
+    document.getElementById('wrong-msg').textContent = '';
+  }
+
+  document.getElementById('quiz-overlay').classList.add('show');
+  setTimeout(() => document.getElementById('ans-input').focus(), 100);
+}
+
+function closeQuiz() {
+  document.getElementById('quiz-overlay').classList.remove('show');
+  activeCard = null;
+}
+
+// ── 정답 체크 ──
+function checkAnswer() {
+  if (activeCard === null) return;
+  const inp = document.getElementById('ans-input');
+  const val = inp.value.trim();
+  const correct = CARDS[activeCard].answer;
+
+  if (val === correct) {
+    inp.className = 'answer-input correct-flash';
+    solved.add(activeCard);
+    updateStatus();
+    setTimeout(() => {
+      closeQuiz();
+      renderBoard();
+      checkBingo();
+    }, 400);
+  } else {
+    inp.className = 'answer-input wrong';
+    document.getElementById('wrong-msg').textContent = '틀렸어요. 칼럼을 읽고 다시 도전해보세요!';
+    setTimeout(() => { inp.className = 'answer-input'; }, 600);
+  }
+}
+
+// Enter 키로 제출
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('quiz-overlay').classList.contains('show')) {
+    if (!document.getElementById('q-input-view').style.display || document.getElementById('q-input-view').style.display !== 'none') {
+      checkAnswer();
+    }
+  }
+  if (e.key === 'Escape') closeQuiz();
+});
+
+// ── 상태 업데이트 ──
+function updateStatus() {
+  document.getElementById('solve-num').textContent = solved.size;
+  document.getElementById('bingo-num').textContent = bingoLines.size;
+}
+
+// ── 빙고 체크 ──
+function checkBingo() {
+  let newBingo = false;
+  LINES.forEach((line, li) => {
+    if (!bingoLines.has(li) && line.every(i => solved.has(i))) {
+      bingoLines.add(li);
+      newBingo = true;
+    }
+  });
+  updateStatus();
+  if (newBingo && !entryDone) {
+    setTimeout(() => {
+      spawnConfetti();
+      document.getElementById('bingo-overlay').classList.add('show');
+    }, 600);
+  }
+}
+
+// ── 빙고 모달 ──
+function closeBingo() {
+  document.getElementById('bingo-overlay').classList.remove('show');
+}
+
+function submitEntry() {
+  const name = document.getElementById('b-name').value.trim();
+  const company = document.getElementById('b-company').value.trim();
+  const dept = document.getElementById('b-dept').value.trim();
+  if (!name || !company || !dept) { alert('이름, 소속회사, 팀을 모두 입력해주세요.'); return; }
+  // TODO: Apps Script 웹앱 URL 연결
+  console.log('빙고 응모:', { name, company, dept, solved: [...solved], bingos: bingoLines.size });
+  entryDone = true;
+  document.getElementById('bingo-form').style.display = 'none';
+  document.getElementById('done-msg').style.display = 'block';
+}
+
+// ── Confetti ──
+function spawnConfetti() {
+  const em = ['🌸','🌷','🌺','✿','🌼','⭐','🎉'];
+  for (let i = 0; i < 40; i++) {
+    setTimeout(() => {
+      const e = document.createElement('div');
+      e.className = 'cpiece';
+      e.style.cssText = `left:${Math.random()*100}vw;top:-40px;font-size:${14+Math.random()*20}px;animation-duration:${1.4+Math.random()*2}s;`;
+      e.textContent = em[Math.floor(Math.random()*em.length)];
+      document.body.appendChild(e);
+      setTimeout(() => e.remove(), 3500);
+    }, i * 60);
+  }
+}
+
+// ── 배경 꽃잎 ──
+(function() {
+  const c = document.getElementById('petals');
+  const em = ['🌸','🌷','✿','🌼'];
+  for (let i = 0; i < 14; i++) {
+    const e = document.createElement('div');
+    e.className = 'petal';
+    e.style.cssText = `left:${5+Math.random()*90}vw;font-size:${10+Math.random()*14}px;animation-duration:${9+Math.random()*10}s;animation-delay:${Math.random()*16}s;`;
+    e.textContent = em[Math.floor(Math.random()*em.length)];
+    c.appendChild(e);
+  }
+})();
+
+renderBoard();
+updateStatus();
+</script>
+</body>
+</html>
