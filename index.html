@@ -518,6 +518,14 @@ function openQuiz(i) {
   const link = document.getElementById('q-link');
   link.href = card.url;
   link.textContent = `📖 ${card.title} 읽기 →`;
+  link.onclick = () => {
+    fetch('https://script.google.com/macros/s/AKfycbwNX7IVtlqHP71HF15sGTgNWHsHeBh86w0KUr5mitT4aHFipCoVQ0Ik6_UHvdcTck5eqA/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'click', title: card.title })
+    });
+  };
 
   if (solved.has(i)) {
     document.getElementById('q-solved-view').style.display = 'block';
@@ -619,6 +627,7 @@ function submitEntry() {
     mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
+      type: 'entry',
       name,
       company,
       dept,
